@@ -9,8 +9,10 @@ import {
   CrowdloanSequence,
   Parachain,
   ParachainLeases,
+  Token,
 } from "../../generated/model";
 import { apiService } from "./api";
+import { constTokenDetails } from "./constantAndDefault";
 import { CrowdloanReturn, ParachainReturn } from "./types";
 import {
   fetchCrowdloan,
@@ -28,6 +30,10 @@ type EntityConstructor<T> = {
 type Record<K extends keyof any, T> = {
   [P in K]: T;
 };
+
+export const timestampToDate = (block: SubstrateBlock): Date => {
+  return new Date(block.timestamp)
+}
 
 export async function getOrCreate<T extends { id: string }>(
   store: DatabaseManager,
@@ -208,11 +214,24 @@ export const ensureFund = async (
 
   const test: any = null;
 
+  // token data check and creation
+  let tokenData: Token | undefined = await store.get(Token, {
+    where: { id: constTokenDetails.id }  // This is temporary until we got way to get the chain id and token id
+  });
+
+  if (!tokenData) {
+    tokenData = new Token(constTokenDetails);
+    await store.save(tokenData);
+    console.log(`[TOKEN]: ${tokenData.id} saved successfully`);
+  }
+
   return getOrUpdate<Crowdloan>(store, Crowdloan, fundId, test, (cur: any) => {
     return !cur
       ? new Crowdloan({
           id: fundId,
           parachain: parachain[0],
+          paraId: paraId.toString(),
+          tokenId: tokenData?.id.toString() || constTokenDetails.id,
           ...rest,
           firstSlot: firstPeriod,
           lastSlot: lastPeriod,

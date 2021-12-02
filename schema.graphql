@@ -35,6 +35,8 @@ type Parachain @entity {
 type Crowdloan @entity {
   id: ID! # generated fund address
   parachain: Parachain!
+  paraId: String!
+  tokenId: String!
   depositor: String!
   verifier: String
   cap: BigInt!
@@ -98,6 +100,7 @@ type Bid @entity {
 
 type Contribution @entity {
   id: ID!
+  crowdloanId: String!
   account: String! 
   parachain: Parachain!
   fund: Crowdloan!
@@ -122,4 +125,41 @@ type CrowdloanSequence @entity {
   curIndex: Int!
   createdAt: DateTime!
   blockNum: Int!
+}
+
+type Token @entity {
+    id: ID!
+    tokenName: String!
+}
+
+type Chain @entity {
+    id: ID!
+    tokenId: String!
+    chainName: String!
+    relayId: String
+    relayChain: String
+}
+
+type Balance @entity {
+    id: ID!
+    accountId: String!
+    tokenId: String!
+    timestamp: DateTime!
+    freeBalance: BigInt
+    bondedBalance: BigInt
+    vestedBalance: BigInt
+}
+
+type Transfer @entity {
+    id: ID!
+    senderAccount: String!
+    reveiverAccount: String!
+    tokenId: String!
+    amount: BigInt!
+    timestamp: DateTime!
+}
+
+type Account @entity {
+    id: ID!
+    chainId: String!
 }

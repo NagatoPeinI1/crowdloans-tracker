@@ -13,6 +13,9 @@ export class Contribution {
   id!: string
 
   @Column_("text", {nullable: false})
+  crowdloanId!: string
+
+  @Column_("text", {nullable: false})
   account!: string
 
   @Index_()

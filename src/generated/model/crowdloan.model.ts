@@ -17,6 +17,12 @@ export class Crowdloan {
   parachain!: Parachain
 
   @Column_("text", {nullable: false})
+  paraId!: string
+
+  @Column_("text", {nullable: false})
+  tokenId!: string
+
+  @Column_("text", {nullable: false})
   depositor!: string
 
   @Column_("text", {nullable: true})

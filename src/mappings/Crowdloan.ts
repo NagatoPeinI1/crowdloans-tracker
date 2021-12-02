@@ -5,7 +5,6 @@ import { Contribution, Parachain, Crowdloan as CrowdloanModel  } from "../genera
 import { CrowdloanStatus } from "../constants";
 import { Crowdloan } from "../types";
 
-//reviewed
 export async function handleCrowdloanCreated({
   store,
   event,
@@ -20,7 +19,6 @@ export async function handleCrowdloanCreated({
   console.info(` ------ [Crowdloan] [Created] Event Completed.`);
 };
 
-//reviewed
 export async function handleCrowdloanContributed({
   store,
   event,
@@ -35,12 +33,13 @@ export async function handleCrowdloanContributed({
 const fund = await ensureFund(fundIdx.toNumber(), store,block);
 const fundId = fund.id
 // const parachain = fund.parachain
-  const crowdLoan =await  get(store, CrowdloanModel, fundId)
+  const crowdLoan = await  get(store, CrowdloanModel, fundId);
   if(crowdLoan){
   const contribution = new Contribution({
     id: `${blockNum}-${event.id}`,
     account: contributorId.toString(),
     parachain,
+    crowdloanId: crowdLoan?.id,
     fund: crowdLoan,
     amount: amount.toBigInt(),
     createdAt: new Date (block.timestamp),
@@ -53,7 +52,6 @@ const fundId = fund.id
 }
 }
 
-//reviewed
 export async function handleCrowdloanDissolved({
   store,
   event,

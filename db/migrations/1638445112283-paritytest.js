@@ -1,16 +1,16 @@
 const { MigrationInterface, QueryRunner } = require("typeorm");
 
-module.exports = class auctiontest1636483768161 {
-    name = 'auctiontest1636483768161'
+module.exports = class paritytest1638445112283 {
+    name = 'paritytest1638445112283'
 
     async up(queryRunner) {
         await queryRunner.query(`CREATE TABLE "parachain_leases" ("id" character varying NOT NULL, "para_id" integer NOT NULL, "lease_range" text NOT NULL, "first_lease" integer NOT NULL, "last_lease" integer NOT NULL, "latest_bid_amount" numeric NOT NULL, "active_for_auction" text, "winning_amount" numeric, "extra_amount" numeric, "won_bid_from" text, "num_block_won" integer, "winning_result_block" integer, "has_won" boolean NOT NULL, "parachain_id" character varying NOT NULL, "auction_id" character varying, CONSTRAINT "PK_fda8294c956880bda2771666a91" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE INDEX "IDX_d1ccf431430ad6ce759c972ddb" ON "parachain_leases" ("parachain_id") `);
         await queryRunner.query(`CREATE INDEX "IDX_7237948a5f4178c1272c69f242" ON "parachain_leases" ("auction_id") `);
-        await queryRunner.query(`CREATE TABLE "contribution" ("id" character varying NOT NULL, "account" text NOT NULL, "amount" numeric NOT NULL, "block_num" integer NOT NULL, "created_at" TIMESTAMP WITH TIME ZONE NOT NULL, "parachain_id" character varying NOT NULL, "fund_id" character varying NOT NULL, CONSTRAINT "PK_878330fa5bb34475732a5883d58" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "contribution" ("id" character varying NOT NULL, "crowdloan_id" text NOT NULL, "account" text NOT NULL, "amount" numeric NOT NULL, "block_num" integer NOT NULL, "created_at" TIMESTAMP WITH TIME ZONE NOT NULL, "parachain_id" character varying NOT NULL, "fund_id" character varying NOT NULL, CONSTRAINT "PK_878330fa5bb34475732a5883d58" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE INDEX "IDX_676bed3b91141b1f2f4dde1cf2" ON "contribution" ("parachain_id") `);
         await queryRunner.query(`CREATE INDEX "IDX_df5e763df749a70ec9d9762838" ON "contribution" ("fund_id") `);
-        await queryRunner.query(`CREATE TABLE "crowdloan" ("id" character varying NOT NULL, "depositor" text NOT NULL, "verifier" text, "cap" numeric NOT NULL, "raised" numeric NOT NULL, "lock_expired_block" integer NOT NULL, "block_num" integer, "first_slot" integer NOT NULL, "last_slot" integer NOT NULL, "status" text NOT NULL, "lease_expired_block" integer, "dissolved_block" integer, "updated_at" TIMESTAMP WITH TIME ZONE, "created_at" TIMESTAMP WITH TIME ZONE NOT NULL, "is_finished" boolean, "won_auction_id" text, "parachain_id" character varying NOT NULL, CONSTRAINT "PK_19a05e349701577c8c1679ae84d" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "crowdloan" ("id" character varying NOT NULL, "para_id" text NOT NULL, "token_id" text NOT NULL, "depositor" text NOT NULL, "verifier" text, "cap" numeric NOT NULL, "raised" numeric NOT NULL, "lock_expired_block" integer NOT NULL, "block_num" integer, "first_slot" integer NOT NULL, "last_slot" integer NOT NULL, "status" text NOT NULL, "lease_expired_block" integer, "dissolved_block" integer, "updated_at" TIMESTAMP WITH TIME ZONE, "created_at" TIMESTAMP WITH TIME ZONE NOT NULL, "is_finished" boolean, "won_auction_id" text, "parachain_id" character varying NOT NULL, CONSTRAINT "PK_19a05e349701577c8c1679ae84d" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE INDEX "IDX_005883fcd4519fa5ae88706b3a" ON "crowdloan" ("parachain_id") `);
         await queryRunner.query(`CREATE TABLE "chronicle" ("id" character varying NOT NULL, "cur_auction_id" character varying, "cur_block_num" integer, "cur_lease" integer, "cur_lease_start" integer, "cur_lease_end" integer, CONSTRAINT "PK_1cfaa3cc7527bef31f9c85700f4" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE INDEX "IDX_f00a0560b45ec136d79e34d80b" ON "chronicle" ("cur_auction_id") `);
@@ -27,6 +27,11 @@ module.exports = class auctiontest1636483768161 {
         await queryRunner.query(`CREATE INDEX "IDX_bcdc4b1c157f29429b97a35809" ON "auction_parachain" ("auction_id") `);
         await queryRunner.query(`CREATE INDEX "IDX_09813e8f090426a27be8f78949" ON "auction_parachain" ("parachain_id") `);
         await queryRunner.query(`CREATE TABLE "crowdloan_sequence" ("id" character varying NOT NULL, "cur_index" integer NOT NULL, "created_at" TIMESTAMP WITH TIME ZONE NOT NULL, "block_num" integer NOT NULL, CONSTRAINT "PK_52c7e654f01224a6592dee9e0b6" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "token" ("id" character varying NOT NULL, "token_name" text NOT NULL, CONSTRAINT "PK_82fae97f905930df5d62a702fc9" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "chain" ("id" character varying NOT NULL, "token_id" text NOT NULL, "chain_name" text NOT NULL, "relay_id" text, "relay_chain" text, CONSTRAINT "PK_8e273aafae283b886672c952ecd" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "balance" ("id" character varying NOT NULL, "account_id" text NOT NULL, "token_id" text NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, "free_balance" numeric, "bonded_balance" numeric, "vested_balance" numeric, CONSTRAINT "PK_079dddd31a81672e8143a649ca0" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "transfer" ("id" character varying NOT NULL, "sender_account" text NOT NULL, "reveiver_account" text NOT NULL, "token_id" text NOT NULL, "amount" numeric NOT NULL, "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL, CONSTRAINT "PK_fd9ddbdd49a17afcbe014401295" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TABLE "account" ("id" character varying NOT NULL, "chain_id" text NOT NULL, CONSTRAINT "PK_54115ee388cdb6d86bb4bf5b2ea" PRIMARY KEY ("id"))`);
         await queryRunner.query(`ALTER TABLE "parachain_leases" ADD CONSTRAINT "FK_d1ccf431430ad6ce759c972ddb1" FOREIGN KEY ("parachain_id") REFERENCES "parachain"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "parachain_leases" ADD CONSTRAINT "FK_7237948a5f4178c1272c69f2429" FOREIGN KEY ("auction_id") REFERENCES "auction"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
         await queryRunner.query(`ALTER TABLE "contribution" ADD CONSTRAINT "FK_676bed3b91141b1f2f4dde1cf28" FOREIGN KEY ("parachain_id") REFERENCES "parachain"("id") ON DELETE NO ACTION ON UPDATE NO ACTION`);
@@ -58,6 +63,11 @@ module.exports = class auctiontest1636483768161 {
         await queryRunner.query(`ALTER TABLE "contribution" DROP CONSTRAINT "FK_676bed3b91141b1f2f4dde1cf28"`);
         await queryRunner.query(`ALTER TABLE "parachain_leases" DROP CONSTRAINT "FK_7237948a5f4178c1272c69f2429"`);
         await queryRunner.query(`ALTER TABLE "parachain_leases" DROP CONSTRAINT "FK_d1ccf431430ad6ce759c972ddb1"`);
+        await queryRunner.query(`DROP TABLE "account"`);
+        await queryRunner.query(`DROP TABLE "transfer"`);
+        await queryRunner.query(`DROP TABLE "balance"`);
+        await queryRunner.query(`DROP TABLE "chain"`);
+        await queryRunner.query(`DROP TABLE "token"`);
         await queryRunner.query(`DROP TABLE "crowdloan_sequence"`);
         await queryRunner.query(`DROP INDEX "public"."IDX_09813e8f090426a27be8f78949"`);
         await queryRunner.query(`DROP INDEX "public"."IDX_bcdc4b1c157f29429b97a35809"`);

@@ -5,6 +5,7 @@ typegen:
   outDir: src/types
   events:
     - registrar.Registered
+    - balances.Transfer
     - crowdloan.Created
     - auctions.AuctionStarted
     - auctions.AuctionClosed
@@ -23,6 +24,8 @@ mappings:
   eventHandlers:
     - event: registrar.Registered
       handler: handleParachainRegistered
+    - event: balances.Transfer
+      handler: handleTransfer
     - event: crowdloan.Created
       handler: handleCrowdloanCreated
     - event: auctions.AuctionStarted
@@ -52,4 +55,4 @@ mappings:
   extrinsicHandlers:
   preBlockHooks:
   postBlockHooks:
-  # range: '[ 7513580, ]' # Auction startednewleas
+  range: '[ 7861500, ]' # Auction startednewleas

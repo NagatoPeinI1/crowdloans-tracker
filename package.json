@@ -1,5 +1,5 @@
 {
-  "name": "auction-template",
+  "name": "parity-template",
   "private": true,
   "scripts": {
     "typegen": "hydra-typegen typegen manifest.yml",
@@ -20,7 +20,7 @@
     "@polkadot/types": "^6.5.1",
     "@subsquid/hydra-common": "5.0.0-alpha.9",
     "@subsquid/hydra-processor": "5.0.0-alpha.9",
-    "@subsquid/openreader": "^0.2.0",
+    "@subsquid/openreader": "^0.2.1",
     "axios": "^0.23.0",
     "inflected": "^2.1.0",
     "typeorm": "0.2.38"
